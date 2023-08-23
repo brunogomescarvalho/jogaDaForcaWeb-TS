@@ -140,8 +140,6 @@ export class tela {
         if (!possiveis.includes(letra))
             return letra;
         let posicao = possiveis.indexOf(letra);
-        console.log(posicao);
-        console.log(this.tipoAcento);
         let letraAcentuada;
         switch (this.tipoAcento) {
             case "agudo":
