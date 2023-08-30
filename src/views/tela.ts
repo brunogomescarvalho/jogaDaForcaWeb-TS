@@ -1,29 +1,20 @@
-import { jogo } from "./jogo.js"
+import { jogo } from "../dominio/jogo"
+import './stylesheet.css'
 
 export class tela {
-    private imagens: String[] = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png',];
-
-    private imagem = document.getElementById('imagem') as HTMLImageElement;
-
-    private tecladoVirtual = document.getElementById('teclado') as HTMLDivElement;
-
-    private quadroLetras = document.getElementById('quadroLetras') as HTMLElement;
-
-    private txtMensagem = document.getElementById('txtMensagem') as HTMLElement;
-
-    private btnRefresh = document.getElementById('btnRefresh') as HTMLButtonElement;
-
-    private jogo!: jogo;
-
-    private indexImagem!: Number;
-
-    private letraInformada: String = "";
-
-    private palavraOculta!: String[];
-
-    private acentuacao!: boolean;
-
-    private tipoAcento!: String;
+    imagens: String[] = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png',];
+    imagem = document.getElementById('imagem') as HTMLImageElement;
+    tecladoVirtual = document.getElementById('teclado') as HTMLDivElement;
+    quadroLetras = document.getElementById('quadroLetras') as HTMLElement;
+    txtMensagem = document.getElementById('txtMensagem') as HTMLElement;
+    btnRefresh = document.getElementById('btnRefresh') as HTMLButtonElement;
+    jogo!: jogo;
+    indexImagem!: Number;
+    letraInformada: String = "";
+    palavraOculta!: String[];
+    acentuacao!: boolean;
+    tipoAcento!: String;
+    btnAcento!: HTMLButtonElement;
 
 
     constructor() {
@@ -93,21 +84,23 @@ export class tela {
     private enviarPalpite(event: Event) {
         const button = (event.target) as HTMLButtonElement;
         this.letraInformada = button.innerText;
+
+        if (button.classList.contains('letraJogada') && this.acentuacao == false)
+            return;
+
         if (this.acentuacao == true) {
             this.letraInformada = this.obterAcentuacao(this.letraInformada)!;
             this.acentuacao = false;
+            this.btnAcento.classList.remove('teclaAcento');
         }
         else {
             button.classList.add('letraJogada');
-            button.disabled = true;
         }
 
-        console.log(this.letraInformada)
         const acertou = this.verificarPalpite(this.letraInformada);
         this.atualizarJogada(acertou);
         this.verificarStatusJogo();
     }
-
 
     private verificarStatusJogo() {
         if (this.jogo.fimDeJogo()) {
@@ -135,7 +128,6 @@ export class tela {
         let index = this.indexImagem.valueOf();
         this.atualizarImagem(++index);
         this.indexImagem = index;
-
     }
 
     private verificarPalpite(letra: String): Boolean {
@@ -169,16 +161,26 @@ export class tela {
     private acentuar(sender: Event): void {
         this.acentuacao = true;
         const acento = sender.target as HTMLButtonElement;
+        acento.classList.add('teclaAcento');
         this.tipoAcento = acento.getAttribute("nome")!;
+        this.btnAcento = acento;
     }
 
     private obterAcentuacao(letra: String): String {
-        const possiveis = ["A", "E", "I", "O", "U"];
+        const possiveis = ["A", "E", "I", "O", "U"] as String[];
         const agudos = ["Á", "É", "Í", "Ó", "Ú"];
         const circunflexos = ["Â", "Ê", "I", "Ô", "U"];
         const till = ["Ã", "E", "I", "Õ", "U"];
 
-        if (!possiveis.includes(letra as string))
+        let existe = false;
+        possiveis.forEach(x => {
+            if (x == letra) {
+                existe = true;
+                return;
+            }
+        })
+
+        if (!existe)
             return letra;
 
         let posicao = possiveis.indexOf(letra as string)!;

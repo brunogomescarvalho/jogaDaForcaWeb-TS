@@ -1,0 +1,57 @@
+
+
+.quadro-letras {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.letra {
+    text-align: center;
+    border: 2px solid rgb(79, 94, 108);
+    border-radius: 5px;
+    font-size: 20px;
+    margin: 10px;
+    width: calc(100% - 10px);
+    max-width: 50px;
+}
+
+.teclado {
+    display: grid;
+    grid-template-columns: repeat(10, 35px);
+    flex-direction: column;
+    gap: 2.2px;
+   justify-content: center;
+}
+
+.tecla {
+    font-size: 20px;
+    margin: 1px;
+    width: 35px;
+    border-radius: 5px;
+
+}
+
+.tecla:hover {
+    background-color: rgb(64, 108, 169);
+}
+
+.letraJogada {
+    background-color: rgb(127, 155, 182);
+}
+
+.teclaAcento{
+    background-color: rgb(127, 182, 155);
+}
+
+.quadro-mensagem {
+    font-size: 22px;
+}
+
+.venceu {
+    color: rgb(59, 186, 37);
+}
+
+.fim-de-jogo {
+    color: rgb(255, 78, 47);
+}
