@@ -5,7 +5,9 @@
     align-items: center;
     display: flex;
 }
-
+.container{
+    position: absolute;
+}
 .letra {
     text-align: center;
     border: 2px solid rgb(79, 94, 108);
@@ -33,7 +35,7 @@
 }
 
 .tecla:hover {
-    background-color: rgb(64, 108, 169);
+    background-color: rgb(99, 125, 160);
 }
 
 .letraJogada {

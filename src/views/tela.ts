@@ -8,6 +8,7 @@ export class tela {
     quadroLetras = document.getElementById('quadroLetras') as HTMLElement;
     txtMensagem = document.getElementById('txtMensagem') as HTMLElement;
     btnRefresh = document.getElementById('btnRefresh') as HTMLButtonElement;
+    pnlLetrasJogadas = document.getElementById('letrasJogadas') as HTMLDivElement;
     jogo!: jogo;
     indexImagem!: Number;
     letraInformada: String = "";
@@ -15,11 +16,12 @@ export class tela {
     acentuacao!: boolean;
     tipoAcento!: String;
     btnAcento!: HTMLButtonElement;
-
+    letrasJogadas: String[];
 
     constructor() {
         this.iniciar();
         this.btnRefresh.addEventListener('click', () => this.iniciar());
+
     }
 
     private construirTecladoVirtual() {
@@ -85,21 +87,24 @@ export class tela {
         const button = (event.target) as HTMLButtonElement;
         this.letraInformada = button.innerText;
 
-        if (button.classList.contains('letraJogada') && this.acentuacao == false)
-            return;
+        let letraJogada = this.letrasJogadas.find(x => x == this.letraInformada) as string;
+
+        if (letraJogada)
+            return
 
         if (this.acentuacao == true) {
             this.letraInformada = this.obterAcentuacao(this.letraInformada)!;
             this.acentuacao = false;
             this.btnAcento.classList.remove('teclaAcento');
         }
-        else {
-            button.classList.add('letraJogada');
-        }
+
+        this.letrasJogadas.push(this.letraInformada);
+        this.pnlLetrasJogadas.textContent = `Jogadas: ${this.letrasJogadas.join(' - ')}`
 
         const acertou = this.verificarPalpite(this.letraInformada);
         this.atualizarJogada(acertou);
         this.verificarStatusJogo();
+
     }
 
     private verificarStatusJogo() {
@@ -156,6 +161,8 @@ export class tela {
         this.construirTecladoVirtual();
         this.construirPainelLetras();
         this.atualizarImagem(this.indexImagem);
+        this.pnlLetrasJogadas.textContent = "Jogadas:";
+        this.letrasJogadas = [];
     }
 
     private acentuar(sender: Event): void {
@@ -172,15 +179,9 @@ export class tela {
         const circunflexos = ["Â", "Ê", "I", "Ô", "U"];
         const till = ["Ã", "E", "I", "Õ", "U"];
 
-        let existe = false;
-        possiveis.forEach(x => {
-            if (x == letra) {
-                existe = true;
-                return;
-            }
-        })
+        let letraParaAcentuar = possiveis.find(x => x == letra);
 
-        if (!existe)
+        if (!letraParaAcentuar)
             return letra;
 
         let posicao = possiveis.indexOf(letra as string)!;
